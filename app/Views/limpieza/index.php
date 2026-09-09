@@ -1,77 +1,80 @@
 <?= $this->include('templates/header') ?>
 
-  <div class="topbar">
+  <div class="page-title-row">
     <div>
-      <h1>Limpieza</h1>
-      <p>Áreas registradas y su estado de limpieza.</p>
+      <h2>Control de Limpieza</h2>
+      <p>Gestión de cuadrillas y aseo en recintos e instalaciones.</p>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="panel__header">
-      <h2>Registrar área</h2>
+  <div class="form-table-layout">
+    <!-- Formulario de Registro -->
+    <div class="content-box">
+      <div class="box-head">
+        <h4>Registrar Nueva Área</h4>
+      </div>
+      <form method="post" action="<?= base_url('limpieza/guardar') ?>" class="modern-form">
+        <div class="form-field">
+          <label for="nombre">Nombre del Área</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Ej: Hábitat de Felinos Menores" required>
+        </div>
+
+        <div class="form-field">
+          <label for="tipo">Tipo de Instalación</label>
+          <select id="tipo" name="tipo">
+            <option value="jaula">Recinto / Jaula</option>
+            <option value="sanitario">Servicio Sanitario</option>
+            <option value="jardin">Sendero / Jardín</option>
+            <option value="juegos">Área Recreativa</option>
+            <option value="oficina">Oficina Administrativa</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="responsable">Responsable Asignado</label>
+          <input type="text" id="responsable" name="responsable" placeholder="Nombre completo" required>
+        </div>
+
+        <button type="submit" class="submit-btn">Guardar Asignación</button>
+      </form>
     </div>
 
-    <form method="post" action="<?= base_url('limpieza/guardar') ?>">
-      <div class="form-group">
-        <label for="nombre">Nombre del área</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ej. Jaula de leones">
+    <!-- Listado -->
+    <div class="content-box">
+      <div class="box-head flex-between">
+        <h4>Áreas Registradas</h4>
+        <span class="counter-badge"><?= isset($areas) ? count($areas) : 0 ?> total</span>
       </div>
 
-      <div class="form-group">
-        <label for="tipo">Tipo de área</label>
-        <select id="tipo" name="tipo">
-          <option value="jaula">Jaula</option>
-          <option value="sanitario">Sanitario</option>
-          <option value="jardin">Jardín</option>
-          <option value="juegos">Área de juegos</option>
-          <option value="oficina">Oficina</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="responsable">Responsable asignado</label>
-        <input type="text" id="responsable" name="responsable" placeholder="Nombre del encargado">
-      </div>
-
-      <button type="submit" class="btn btn-primary">Guardar área</button>
-    </form>
-  </div>
-
-  <div class="panel">
-    <div class="panel__header">
-      <h2>Áreas registradas</h2>
-      <span style="font-size:0.85rem;color:var(--color-ink-soft)">
-        <?= isset($areas) ? count($areas) : 0 ?> en total
-      </span>
-    </div>
-
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Área</th>
-          <th>Tipo</th>
-          <th>Responsable</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if (empty($areas)): ?>
-          <tr>
-            <td colspan="4" style="color:var(--color-ink-soft)">Todavía no hay áreas registradas.</td>
-          </tr>
-        <?php else: ?>
-          <?php foreach ($areas as $area): ?>
+      <div class="table-container">
+        <table class="styled-table">
+          <thead>
             <tr>
-              <td><?= esc($area['nombre']) ?></td>
-              <td><?= esc($area['tipo']) ?></td>
-              <td><?= esc($area['responsable']) ?></td>
-              <td><?= esc($area['estado']) ?></td>
+              <th>Área</th>
+              <th>Tipo</th>
+              <th>Responsable</th>
+              <th>Estado</th>
             </tr>
-          <?php endforeach; ?>
-        <?php endif; ?>
-      </tbody>
-    </table>
+          </thead>
+          <tbody>
+            <?php if (empty($areas)): ?>
+              <tr>
+                <td colspan="4" class="empty-state">No hay áreas asignadas para hoy.</td>
+              </tr>
+            <?php else: ?>
+              <?php foreach ($areas as $area): ?>
+                <tr>
+                  <td><strong><?= esc($area['nombre']) ?></strong></td>
+                  <td><span class="type-pill"><?= esc(ucfirst($area['tipo'])) ?></span></td>
+                  <td><?= esc($area['responsable']) ?></td>
+                  <td><span class="status-chip is-<?= esc($area['estado'] ?? 'pendiente') ?>"><?= esc(ucfirst($area['estado'] ?? 'Pendiente')) ?></span></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 <?= $this->include('templates/footer') ?>
