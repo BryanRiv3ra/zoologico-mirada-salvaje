@@ -1,10 +1,14 @@
 <?= $this->include('templates/header') ?>
 
-  <div class="page-title-row">
+      <div class="page-title-row flex-between" style="align-items:flex-start;">
     <div>
       <h2>Historial Clínico</h2>
       <p>Registro de tratamientos (medicamentos y vitaminas) por animal.</p>
     </div>
+    <a href="<?= base_url('clinico/vacunas') ?>" class="submit-btn"
+       style="display:inline-block;width:auto;white-space:nowrap;text-decoration:none;padding:11px 18px;">
+      Ver calendario de vacunas
+    </a>
   </div>
 
   <?php if (session()->getFlashdata('mensaje')): ?>
