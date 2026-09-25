@@ -75,11 +75,14 @@ $routes->group('limpieza', ['filter' => ['auth', 'csrf']], static function ($rou
         $routes->get('exportar', 'Limpieza\Reportes::exportarCsv');
     });
 });
-// ===== FIN LIMPIEZA =====
-
 // ===== ALIMENTACIÓN =====
 $routes->group('alimentacion', static function ($routes) {
     $routes->get('/', 'Alimentacion\Inicio::index');
+
+    // Dietas por animal
+    $routes->get('dietas', 'Alimentacion\Dietas::index');
+    $routes->post('dietas/guardar', 'Alimentacion\Dietas::guardar');
+    $routes->get('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
 });
 // ===== FIN ALIMENTACIÓN =====
 
