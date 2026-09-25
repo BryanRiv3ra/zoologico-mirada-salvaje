@@ -2,15 +2,6 @@
 
 namespace App\Controllers;
 
-/**
- * Controlador SOLO para desarrollo/integración.
- *
- * Crea una sesión simulada con un rol para poder probar los filtros de rol
- * antes de que exista la autenticación real (módulo core-autenticacion).
- * ⚠️ Este controlador NO debe estar disponible en producción: sus rutas solo
- * se registran cuando CI_ENVIRONMENT = development y este archivo debe
- * eliminarse al integrar la autenticación definitiva.
- */
 class Dev extends BaseController
 {
     protected const ROLES_VALIDOS = [
