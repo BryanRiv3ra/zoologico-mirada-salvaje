@@ -4,6 +4,8 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 $routes->get('/', 'Home::index');
+
+// ===== CONTROL CLINICO =====
 $routes->get('clinico', 'Clinico::index');
 $routes->post('clinico/guardar', 'Clinico::guardar');
 $routes->get('clinico/editar/(:num)', 'Clinico::editar/$1');
@@ -14,3 +16,70 @@ $routes->get('clinico/vacunas', 'ClinicoVacunas::index');
 $routes->post('clinico/vacunas/guardar', 'ClinicoVacunas::guardar');
 $routes->post('clinico/vacunas/guardar-vacuna', 'ClinicoVacunas::guardarVacuna');
 $routes->get('clinico/vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
+// ===== FIN CONTROL CLINICO =====
+
+// ===== LIMPIEZA =====
+$routes->group('limpieza', ['filter' => ['auth', 'csrf']], static function ($routes) {
+    $routes->get('/', 'Limpieza\Inicio::index');
+
+    // Zonas (solo administrador)
+    $routes->group('zonas', ['filter' => 'rol:administrador'], static function ($routes) {
+        $routes->get('/', 'Limpieza\Zonas::index');
+        $routes->get('nueva', 'Limpieza\Zonas::nueva');
+        $routes->get('editar/(:num)', 'Limpieza\Zonas::editar/$1');
+        $routes->post('guardar', 'Limpieza\Zonas::guardar');
+        $routes->post('actualizar/(:num)', 'Limpieza\Zonas::actualizar/$1');
+        $routes->post('desactivar/(:num)', 'Limpieza\Zonas::desactivar/$1');
+    });
+
+    // Tareas (administrador y supervisor)
+    $routes->group('tareas', ['filter' => 'rol:administrador,supervisor'], static function ($routes) {
+        $routes->get('/', 'Limpieza\Tareas::index');
+        $routes->get('nueva', 'Limpieza\Tareas::nueva');
+        $routes->get('editar/(:num)', 'Limpieza\Tareas::editar/$1');
+        $routes->get('insumos/(:num)', 'Limpieza\Tareas::insumos/$1');
+        $routes->post('guardar', 'Limpieza\Tareas::guardar');
+        $routes->post('actualizar/(:num)', 'Limpieza\Tareas::actualizar/$1');
+        $routes->post('desactivar/(:num)', 'Limpieza\Tareas::desactivar/$1');
+        $routes->post('insumos/(:num)/agregar', 'Limpieza\Tareas::agregarInsumo/$1');
+        $routes->post('insumos/quitar/(:num)', 'Limpieza\Tareas::quitarInsumo/$1');
+    });
+
+    // Asignaciones (solo supervisor)
+    $routes->group('asignaciones', ['filter' => 'rol:supervisor'], static function ($routes) {
+        $routes->get('nueva', 'Limpieza\Asignaciones::nueva');
+        $routes->get('reasignar/(:num)', 'Limpieza\Asignaciones::reasignar/$1');
+        $routes->post('guardar', 'Limpieza\Asignaciones::guardar');
+        $routes->post('reasignar/(:num)', 'Limpieza\Asignaciones::guardarReasignacion/$1');
+    });
+
+    // Seguimiento (supervisor y administrador en lectura)
+    $routes->group('seguimiento', ['filter' => 'rol:supervisor,administrador'], static function ($routes) {
+        $routes->get('/', 'Limpieza\Seguimiento::index');
+        $routes->get('detalle/(:num)', 'Limpieza\Seguimiento::detalle/$1');
+    });
+
+    // Mis asignaciones (empleado de limpieza)
+    $routes->group('mis-tareas', ['filter' => 'rol:empleado_limpieza'], static function ($routes) {
+        $routes->get('/', 'Limpieza\MisTareas::index');
+        $routes->get('detalle/(:num)', 'Limpieza\MisTareas::detalle/$1');
+        $routes->post('iniciar/(:num)', 'Limpieza\MisTareas::iniciar/$1');
+        $routes->post('finalizar/(:num)', 'Limpieza\MisTareas::finalizar/$1');
+        $routes->post('observaciones/(:num)', 'Limpieza\MisTareas::observaciones/$1');
+    });
+
+    // Reportes (administrador y supervisor)
+    $routes->group('reportes', ['filter' => 'rol:administrador,supervisor'], static function ($routes) {
+        $routes->get('/', 'Limpieza\Reportes::index');
+        $routes->get('imprimir', 'Limpieza\Reportes::imprimir');
+        $routes->get('exportar', 'Limpieza\Reportes::exportarCsv');
+    });
+});
+// ===== FIN LIMPIEZA =====
+
+// ===== DEV (solo desarrollo; reemplazar al integrar core-autenticacion) =====
+if (ENVIRONMENT === 'development') {
+    $routes->get('dev/sesion/(:segment)', 'Dev::sesion/$1');
+    $routes->get('dev/cerrar', 'Dev::cerrar');
+}
+// ===== FIN DEV =====
