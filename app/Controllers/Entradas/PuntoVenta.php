@@ -14,6 +14,10 @@ use App\Models\Entradas\VisitanteModel;
 
 /**
  * Punto de venta (taquilla). Permiso: administrador, cajero, supervisor.
+ *
+ * Adaptado al modelo E-R real del proyecto: no existen tablas independientes
+ * "ventas"/"boletos", así que cada boleto es una fila de entradas.entradas
+ * con su propio pago en entradas.pagos. No se agrupan boletos por venta.
  */
 class PuntoVenta extends BaseController
 {
@@ -26,25 +30,23 @@ class PuntoVenta extends BaseController
         $desde = date('Y-m-d', strtotime('-30 days'));
 
         $db = db_connect();
-        $hoy = (array) $db->table('entradas.ventas')
-            ->select('COUNT(*) as total_ventas, COALESCE(SUM(total),0) as monto')
-            ->where('estado', 'completada')
-            ->where('fecha >=', $fecha . ' 00:00:00')
+        $resumen = $db->table('entradas.entradas as e')
+            ->select('COUNT(*) as total_boletos, COALESCE(SUM(e.total),0) as monto')
+            ->join('entradas.pagos as p', 'p.entrada_id = e.id', 'left')
+            ->where('e.fecha_compra >=', $fecha . ' 00:00:00')
+            ->where('(p.estado IS NULL OR p.estado != \'rechazado\')', null, false)
             ->get()->getResultArray();
 
-        $boletosHoy = (int) $db->table('entradas.boletos as b')
-            ->join('entradas.ventas as v', 'v.id = b.venta_id')
-            ->where('v.estado', 'completada')
-            ->where('v.fecha >=', $fecha . ' 00:00:00')
-            ->countAllResults();
+        $totalBoletos = (int) ($resumen[0]['total_boletos'] ?? 0);
+        $monto        = (float) ($resumen[0]['monto'] ?? 0);
 
         $ventas = $ventaModel->reporte($desde, $fecha);
 
         return view('entradas/punto_venta/index', [
-            'titulo'      => 'Taquilla',
-            'cssExtra'    => 'entradas.css',
-            'ventas'      => $ventas,
-            'resumenHoy'  => ['ventas' => (int) ($hoy[0]['total_ventas'] ?? 0), 'monto' => (float) ($hoy[0]['monto'] ?? 0), 'boletos' => $boletosHoy],
+            'titulo'     => 'Taquilla',
+            'cssExtra'   => 'entradas.css',
+            'ventas'     => $ventas,
+            'resumenHoy' => ['ventas' => $totalBoletos, 'monto' => $monto, 'boletos' => $totalBoletos],
         ]);
     }
 
@@ -83,22 +85,16 @@ class PuntoVenta extends BaseController
             return redirect()->back()->with('error', 'Elige al menos una entrada.');
         }
 
-        $empleadoId = (int) session('empleado_id');
-        if ($empleadoId <= 0) {
-            return redirect()->back()->with('error', 'No hay un empleado de taquilla asociado a la sesión.');
-        }
-
-        $clienteId = null;
-        $clienteNombre = trim((string) $this->request->getPost('cliente_nombre'));
-        $clienteEmail  = trim((string) $this->request->getPost('cliente_email'));
+        $visitanteModel = model(VisitanteModel::class);
+        $clienteNombre  = trim((string) $this->request->getPost('cliente_nombre'));
+        $clienteEmail   = trim((string) $this->request->getPost('cliente_email'));
 
         if ($clienteNombre !== '') {
-            $visitanteModel = model(VisitanteModel::class);
             $cliente = $clienteEmail !== '' ? $visitanteModel->buscarPorEmail($clienteEmail) : null;
             if ($cliente === null) {
                 $visitanteModel->insert([
                     'nombre'   => $clienteNombre,
-                    'email'    => $clienteEmail,
+                    'email'    => $clienteEmail !== '' ? $clienteEmail : null,
                     'telefono' => trim((string) $this->request->getPost('cliente_telefono')),
                 ]);
                 if ($visitanteModel->errors() !== []) {
@@ -108,24 +104,37 @@ class PuntoVenta extends BaseController
             } else {
                 $clienteId = (int) $cliente['id'];
             }
+        } else {
+            // entradas.entradas.visitante_id es obligatorio (NOT NULL) en el
+            // modelo E-R: para una venta sin datos de cliente, reutilizamos
+            // (o creamos una sola vez) un visitante genérico de taquilla.
+            $generico = $visitanteModel->where('email', 'taquilla.general@mirada-salvaje.local')->first();
+            if ($generico === null) {
+                $visitanteModel->insert([
+                    'nombre'   => 'Visitante de taquilla (sin registrar)',
+                    'email'    => 'taquilla.general@mirada-salvaje.local',
+                    'telefono' => null,
+                ]);
+                $clienteId = (int) $visitanteModel->getInsertID();
+            } else {
+                $clienteId = (int) $generico['id'];
+            }
         }
 
         try {
             $servicio = new ServicioVentas();
-            $venta = $servicio->crearVenta($lineas, [
-                'empleado_id'  => $empleadoId,
+            $resultado = $servicio->crearVenta($lineas, [
                 'cliente_id'   => $clienteId,
                 'fecha_visita' => (string) $this->request->getPost('fecha_visita'),
-                'tipo_venta'   => 'taquilla',
-                'punto_venta'  => (string) $this->request->getPost('punto_venta') ?? 'Taquilla principal',
+                'punto_venta'  => (string) $this->request->getPost('punto_venta') ?: 'Taquilla principal',
                 'metodo_pago'  => (string) $this->request->getPost('metodo_pago'),
             ]);
         } catch (VentaException $ex) {
             return redirect()->back()->with('error', $ex->getMessage());
         }
 
-        return redirect()->to('/entradas/taquilla/detalle/' . $venta['venta_id'])
-            ->with('success', 'Venta ' . $venta['codigo_venta'] . ' registrada correctamente.');
+        return redirect()->to('/entradas/taquilla/detalle/' . $resultado['primer_id'])
+            ->with('success', 'Se registraron ' . $resultado['cantidad'] . ' boleto(s) por un total de Q ' . number_format($resultado['total'], 2) . '.');
     }
 
     public function detalle(int $id): string
@@ -136,7 +145,7 @@ class PuntoVenta extends BaseController
         }
 
         return view('entradas/punto_venta/detalle', [
-            'titulo'   => 'Venta ' . $venta['codigo'],
+            'titulo'   => 'Boleto ' . $venta['codigo'],
             'cssExtra' => 'entradas.css',
             'venta'    => $venta,
             'qr'       => new GeneradorQr(),
@@ -154,22 +163,23 @@ class PuntoVenta extends BaseController
             return redirect()->back()->with('error', $ex->getMessage());
         }
 
-        return redirect()->to('/entradas/taquilla/detalle/' . $id)->with('success', 'Venta anulada correctamente.');
+        return redirect()->to('/entradas/taquilla/detalle/' . $id)->with('success', 'Boleto anulado correctamente.');
     }
 
     private function promosPorTarifa(): array
     {
-        $promos = model(PromocionModel::class)->activas();
+        $promos = model(PromocionModel::class)->findAll();
         $mapa   = [];
 
+        // No existe tabla promocion_tarifa en el E-R actual: toda promoción
+        // vigente se ofrece para todas las tarifas.
+        $hoy = date('Y-m-d');
         foreach ($promos as $promo) {
-            $relaciones = model(PromocionTarifaModel::class)
-                ->select('tarifa_id')
-                ->where('promocion_id', $promo['id'])
-                ->findAll();
-
-            foreach ($relaciones as $relacion) {
-                $mapa[(int) $relacion['tarifa_id']][] = $promo;
+            if ($promo['fecha_inicio'] > $hoy || $promo['fecha_fin'] < $hoy) {
+                continue;
+            }
+            foreach (model(TarifaModel::class)->activas() as $tarifa) {
+                $mapa[(int) $tarifa['id']][] = $promo;
             }
         }
 
