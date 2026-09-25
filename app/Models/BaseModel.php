@@ -9,4 +9,6 @@ abstract class BaseModel extends Model
     protected $returnType = 'array';
     protected $useTimestamps = false;
     protected $protectFields = true;
+    protected $allowCallbacks = true;
+    protected $skipValidation = false;
 }
