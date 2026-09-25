@@ -77,6 +77,13 @@ $routes->group('limpieza', ['filter' => ['auth', 'csrf']], static function ($rou
 });
 // ===== FIN LIMPIEZA =====
 
+// ===== ALIMENTACIÓN =====
+$routes->group('alimentacion', static function ($routes) {
+    $routes->get('/', 'Alimentacion\Inicio::index');
+});
+// ===== FIN ALIMENTACIÓN =====
+
+
 // ==========================================================================
 // PORTAL PÚBLICO (compra de entradas)
 // ==========================================================================
