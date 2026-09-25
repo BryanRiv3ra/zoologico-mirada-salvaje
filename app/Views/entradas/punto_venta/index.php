@@ -11,6 +11,7 @@
 <div class="content-box" style="display:flex; gap:8px; padding:12px 16px; margin-bottom:20px;">
   <a href="<?= base_url('entradas/taquilla') ?>" class="status-chip <?= strpos(current_url(), 'taquilla') !== false ? 'is-completada' : '' ?>" style="text-decoration:none; padding:8px 16px;">Taquilla</a>
   <a href="<?= base_url('entradas/tarifas') ?>" class="status-chip <?= strpos(current_url(), 'tarifas') !== false ? 'is-completada' : '' ?>" style="text-decoration:none; padding:8px 16px;">Tarifas</a>
+  <a href="<?= base_url('entradas/promociones') ?>" class="status-chip <?= strpos(current_url(), 'promociones') !== false ? 'is-completada' : '' ?>" style="text-decoration:none; padding:8px 16px;">Promociones</a>
   <a href="<?= base_url('entradas/reportes') ?>" class="status-chip <?= strpos(current_url(), 'reportes') !== false ? 'is-completada' : '' ?>" style="text-decoration:none; padding:8px 16px;">Reportes</a>
 </div>
 

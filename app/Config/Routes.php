@@ -112,12 +112,21 @@ $routes->group('entradas', ['filter' => ['auth', 'csrf']], function ($routes) {
         $routes->post('desactivar/(:num)', 'Entradas\Tarifas::desactivar/$1');
     });
 
-    
     // Reportes
     $routes->group('reportes', ['filter' => 'rol:administrador,supervisor'], function ($routes) {
         $routes->get('/', 'Entradas\Reportes::index');
         $routes->get('imprimir', 'Entradas\Reportes::imprimir');
         $routes->get('exportar', 'Entradas\Reportes::exportarCsv');
+    });
+
+    // Promociones
+    $routes->group('promociones', ['filter' => 'rol:admin_mercadeo,administrador'], function ($routes) {
+        $routes->get('/', 'Entradas\Promociones::index');
+        $routes->get('nueva', 'Entradas\Promociones::nueva');
+        $routes->post('guardar', 'Entradas\Promociones::guardar');
+        $routes->get('editar/(:num)', 'Entradas\Promociones::editar/$1');
+        $routes->post('actualizar/(:num)', 'Entradas\Promociones::actualizar/$1');
+        $routes->post('desactivar/(:num)', 'Entradas\Promociones::desactivar/$1');
     });
 });
 

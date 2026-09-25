@@ -5,7 +5,9 @@ namespace App\Models\Entradas;
 use CodeIgniter\Model;
 
 /**
- * Promociones aplicables a tarifas (descuento porcentual).
+ * Promociones aplicables a boletos (descuento porcentual).
+ * Adaptado al ER real: no existe tabla de relación promocion_tarifa,
+ * así que toda promoción vigente aplica a todas las tarifas activas.
  */
 class PromocionModel extends Model
 {
@@ -52,27 +54,5 @@ class PromocionModel extends Model
         return $this->orderBy('activo', 'desc')
             ->orderBy('nombre', 'asc')
             ->findAll();
-    }
-
-    /**
-     * Promoción con sus tarifas asociadas.
-     */
-    public function conTarifas(int $id): ?array
-    {
-        $promocion = $this->find($id);
-        if ($promocion === null) {
-            return null;
-        }
-
-        $db = db_connect();
-        $promocion['tarifas'] = $db->table('entradas.promocion_tarifa as pt')
-            ->select('t.id, t.nombre, t.precio, t.tipo_visitante')
-            ->join('entradas.tarifas as t', 't.id = pt.tarifa_id')
-            ->where('pt.promocion_id', $id)
-            ->orderBy('t.nombre', 'asc')
-            ->get()
-            ->getResultArray();
-
-        return $promocion;
     }
 }
