@@ -13,23 +13,23 @@
       <h4>Opciones del módulo</h4>
     </div>
 
-    <div style="display:grid;gap:14px;">
-      <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+<div style="display:grid;gap:14px;">
+    <a href="<?= base_url('alimentacion/dietas') ?>" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Dietas por animal
-      </a>
+    </a>
 
-      <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+    <a href="<?= base_url('alimentacion/horarios') ?>" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Horarios de alimentación
-      </a>
+    </a>
 
-      <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+    <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Registros de alimentación
-      </a>
+    </a>
 
-      <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+    <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Inventario de alimentos
-      </a>
-    </div>
+    </a>
+</div>
   </div>
 
   <div class="content-box">

@@ -83,6 +83,11 @@ $routes->group('alimentacion', static function ($routes) {
     $routes->get('dietas', 'Alimentacion\Dietas::index');
     $routes->post('dietas/guardar', 'Alimentacion\Dietas::guardar');
     $routes->get('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
+
+    // Horarios de alimentación
+    $routes->get('horarios', 'Alimentacion\Horarios::index');
+    $routes->post('horarios/guardar', 'Alimentacion\Horarios::guardar');
+    $routes->get('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
 });
 // ===== FIN ALIMENTACIÓN =====
 
