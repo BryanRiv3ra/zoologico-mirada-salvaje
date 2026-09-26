@@ -26,7 +26,7 @@
         Registros de alimentación
     </a>
 
-    <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+    <a href="<?= base_url('alimentacion/inventario') ?>" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Inventario de alimentos
     </a>
 </div>
