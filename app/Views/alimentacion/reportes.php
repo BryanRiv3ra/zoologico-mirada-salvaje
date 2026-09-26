@@ -6,9 +6,21 @@
         <p>Resumen general del inventario de alimentos y registros de alimentación realizados.</p>
     </div>
 
+<div style="display:flex;gap:10px;">
+    <button 
+        type="button" 
+        class="submit-btn" 
+        style="width:auto;padding:12px 22px;"
+        onclick="window.print()"
+    >
+        Imprimir / Guardar PDF
+    </button>
+
     <a href="<?= base_url('alimentacion') ?>" class="submit-btn" style="text-decoration:none;display:inline-block;width:auto;padding:12px 22px;">
         Volver al módulo
     </a>
+</div>
+
 </div>
 
 <div class="form-table-layout">
