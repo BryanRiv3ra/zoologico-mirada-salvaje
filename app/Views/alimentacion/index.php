@@ -29,6 +29,10 @@
     <a href="<?= base_url('alimentacion/inventario') ?>" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Inventario de alimentos
     </a>
+
+    <a href="<?= base_url('alimentacion/reportes') ?>" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+    Reporte de alimentación
+</a>
 </div>
   </div>
 

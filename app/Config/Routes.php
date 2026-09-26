@@ -98,6 +98,9 @@ $routes->group('alimentacion', static function ($routes) {
     $routes->get('inventario', 'Alimentacion\Inventario::index');
     $routes->post('inventario/guardar', 'Alimentacion\Inventario::guardar');
     $routes->get('inventario/eliminar/(:num)', 'Alimentacion\Inventario::eliminar/$1');
+
+    // Reportes de alimentación
+    $routes->get('reportes', 'Alimentacion\Reportes::index');
 });
 // ===== FIN ALIMENTACIÓN =====
 
