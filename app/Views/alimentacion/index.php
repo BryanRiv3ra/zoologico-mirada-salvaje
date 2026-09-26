@@ -50,28 +50,33 @@
             <th>Estado</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td><strong>Dietas</strong></td>
-            <td>Registro de dietas asignadas a cada animal.</td>
-            <td><span class="status-chip is-pendiente">Pendiente</span></td>
-          </tr>
-          <tr>
-            <td><strong>Horarios</strong></td>
-            <td>Programación de horarios de alimentación.</td>
-            <td><span class="status-chip is-pendiente">Pendiente</span></td>
-          </tr>
-          <tr>
-            <td><strong>Registros</strong></td>
-            <td>Control de alimentaciones realizadas por empleados.</td>
-            <td><span class="status-chip is-pendiente">Pendiente</span></td>
-          </tr>
-          <tr>
-            <td><strong>Inventario</strong></td>
-            <td>Consulta y control de stock de alimentos.</td>
-            <td><span class="status-chip is-pendiente">Pendiente</span></td>
-          </tr>
-        </tbody>
+<tbody>
+  <tr>
+    <td><strong>Dietas</strong></td>
+    <td>Registro de dietas asignadas a cada animal.</td>
+    <td><span class="status-chip">Completado</span></td>
+  </tr>
+  <tr>
+    <td><strong>Horarios</strong></td>
+    <td>Programación de horarios de alimentación.</td>
+    <td><span class="status-chip">Completado</span></td>
+  </tr>
+  <tr>
+    <td><strong>Registros</strong></td>
+    <td>Control de alimentaciones realizadas por empleados.</td>
+    <td><span class="status-chip">Completado</span></td>
+  </tr>
+  <tr>
+    <td><strong>Inventario</strong></td>
+    <td>Consulta y control de stock de alimentos.</td>
+    <td><span class="status-chip">Completado</span></td>
+  </tr>
+  <tr>
+    <td><strong>Reporte</strong></td>
+    <td>Resumen general del módulo con opción de imprimir o guardar como PDF.</td>
+    <td><span class="status-chip">Completado</span></td>
+  </tr>
+</tbody>
       </table>
     </div>
   </div>
