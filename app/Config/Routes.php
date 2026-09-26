@@ -88,6 +88,11 @@ $routes->group('alimentacion', static function ($routes) {
     $routes->get('horarios', 'Alimentacion\Horarios::index');
     $routes->post('horarios/guardar', 'Alimentacion\Horarios::guardar');
     $routes->get('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
+
+    // Registros de alimentación
+    $routes->get('registros', 'Alimentacion\Registros::index');
+    $routes->post('registros/guardar', 'Alimentacion\Registros::guardar');
+    $routes->get('registros/eliminar/(:num)', 'Alimentacion\Registros::eliminar/$1');
 });
 // ===== FIN ALIMENTACIÓN =====
 

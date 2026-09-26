@@ -22,7 +22,7 @@
         Horarios de alimentación
     </a>
 
-    <a href="#" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
+    <a href="<?= base_url('alimentacion/registros') ?>" class="submit-btn" style="display:inline-block;text-align:center;text-decoration:none;">
         Registros de alimentación
     </a>
 
