@@ -75,7 +75,35 @@ $routes->group('limpieza', ['filter' => ['auth', 'csrf']], static function ($rou
         $routes->get('exportar', 'Limpieza\Reportes::exportarCsv');
     });
 });
-// ===== FIN LIMPIEZA =====
+// ===== ALIMENTACIÓN =====
+$routes->group('alimentacion', static function ($routes) {
+    $routes->get('/', 'Alimentacion\Inicio::index');
+
+    // Dietas por animal
+    $routes->get('dietas', 'Alimentacion\Dietas::index');
+    $routes->post('dietas/guardar', 'Alimentacion\Dietas::guardar');
+    $routes->get('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
+
+    // Horarios de alimentación
+    $routes->get('horarios', 'Alimentacion\Horarios::index');
+    $routes->post('horarios/guardar', 'Alimentacion\Horarios::guardar');
+    $routes->get('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
+
+    // Registros de alimentación
+    $routes->get('registros', 'Alimentacion\Registros::index');
+    $routes->post('registros/guardar', 'Alimentacion\Registros::guardar');
+    $routes->get('registros/eliminar/(:num)', 'Alimentacion\Registros::eliminar/$1');
+
+    // Inventario de alimentos
+    $routes->get('inventario', 'Alimentacion\Inventario::index');
+    $routes->post('inventario/guardar', 'Alimentacion\Inventario::guardar');
+    $routes->get('inventario/eliminar/(:num)', 'Alimentacion\Inventario::eliminar/$1');
+
+    // Reportes de alimentación
+    $routes->get('reportes', 'Alimentacion\Reportes::index');
+});
+// ===== FIN ALIMENTACIÓN =====
+
 
 // ==========================================================================
 // PORTAL PÚBLICO (compra de entradas)
