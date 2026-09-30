@@ -34,13 +34,13 @@
             <td><?= esc($promo['descuento']) ?>%</td>
             <td><?= esc($promo['fecha_inicio']) ?> — <?= esc($promo['fecha_fin']) ?></td>
             <td>
-              <span class="status-chip is-<?= $promo['activo'] ? 'activa' : 'inactivo' ?>">
-                <?= $promo['activo'] ? 'Activa' : 'Inactiva' ?>
+              <span class="status-chip is-<?= es_activo($promo['activo']) ? 'activa' : 'inactivo' ?>">
+                <?= es_activo($promo['activo']) ? 'Activa' : 'Inactiva' ?>
               </span>
             </td>
             <td class="td-actions">
               <a href="<?= base_url('entradas/promociones/editar/' . $promo['id']) ?>">Editar</a>
-              <?php if ($promo['activo']): ?>
+              <?php if (es_activo($promo['activo'])): ?>
                 <form class="inline-form" method="post" action="<?= base_url('entradas/promociones/desactivar/' . $promo['id']) ?>"
                       onsubmit="return confirm('¿Desactivar esta promoción?');">
                   <?= csrf_field() ?>

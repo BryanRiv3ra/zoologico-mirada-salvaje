@@ -39,14 +39,14 @@
               <td><?= esc($tarea['zona_nombre']) ?></td>
               <td><?= esc($tarea['frecuencia'] ?? '—') ?></td>
               <td>
-                <span class="status-chip is-<?= (int) $tarea['activo'] === 1 ? 'activa' : 'inactivo' ?>">
-                  <?= (int) $tarea['activo'] === 1 ? 'Activa' : 'Inactiva' ?>
+                <span class="status-chip is-<?= es_activo($tarea['activo']) ? 'activa' : 'inactivo' ?>">
+                  <?= es_activo($tarea['activo']) ? 'Activa' : 'Inactiva' ?>
                 </span>
               </td>
               <td class="td-actions">
                 <a href="<?= base_url('limpieza/tareas/editar/' . $tarea['id']) ?>">Editar</a>
                 <a href="<?= base_url('limpieza/tareas/insumos/' . $tarea['id']) ?>">Insumos</a>
-                <?php if ((int) $tarea['activo'] === 1): ?>
+                <?php if (es_activo($tarea['activo'])): ?>
                   <form method="post" action="<?= base_url('limpieza/tareas/desactivar/' . $tarea['id']) ?>" class="inline-form" onsubmit="return confirm('¿Desactivar esta tarea?');">
                     <?= csrf_field() ?>
                     <button type="submit" class="link-danger">Desactivar</button>

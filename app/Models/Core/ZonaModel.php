@@ -17,6 +17,14 @@ class ZonaModel extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['nombre', 'tipo', 'ubicacion', 'capacidad', 'activo'];
 
+    /**
+     * PostgreSQL devuelve los booleanos como 't'/'f'; sin este cast una zona
+     * inactiva llega con 'f', que PHP evalúa como true en las vistas.
+     *
+     * @var list<string>
+     */
+    protected array $casts = ['activo' => 'boolean'];
+
     protected $validationRules = [
         'nombre'    => 'required|max_length[100]',
         'tipo'      => 'required|in_list[jaula,sanitario,jardin,area_juegos,oficina]',
