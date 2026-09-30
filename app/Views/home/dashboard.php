@@ -18,6 +18,8 @@
     </div>
   </section>
 
+  <?= $this->include('templates/alertas') ?>
+
   <!-- Grilla de Módulos -->
   <div class="cards-grid">
 

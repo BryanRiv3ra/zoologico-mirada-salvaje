@@ -7,12 +7,10 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
 /**
- * Filtro de autorización por rol (provisional).
+ * Filtro de autorización por rol.
  *
  * Uso en rutas: `'filter' => 'rol:administrador,supervisor'`.
  * Compara los roles guardados en la sesión contra los permitidos.
- * La autenticación completa la implementa el integrante de core-autenticacion;
- * este filtro conserva la misma interfaz prevista allí.
  */
 class RolFilter implements FilterInterface
 {
@@ -21,13 +19,19 @@ class RolFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        // Mismo criterio que AuthFilter: sin sesión se manda a /login y se
+        // recuerda la URL para volver a ella tras autenticarse.
         if (session('usuario_id') === null) {
-            return redirect()->to('/')->with('error', 'Debes iniciar sesión para acceder a este módulo.');
+            session()->set('redirect_to', current_url());
+
+            return redirect()->to('/login')->with('error', 'Debes iniciar sesión para acceder a este módulo.');
         }
 
         $rolesUsuario = (array) session('roles');
         $permitidos   = (array) $arguments;
 
+        // Con sesión pero sin el rol requerido se mantiene la vista de
+        // acceso restringido: el usuario sí está identificado.
         if ($permitidos !== [] && count(array_intersect($rolesUsuario, $permitidos)) === 0) {
             $usuario = [
                 'nombre'  => session('nombre') ?? 'Usuario',
