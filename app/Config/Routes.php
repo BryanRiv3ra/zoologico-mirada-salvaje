@@ -5,6 +5,18 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->get('/', 'Home::index');
 
+// ==========================================================================
+// AUTENTICACION
+// ==========================================================================
+// GET  /login   formulario (redirige a / si ya hay sesión)
+// POST /login   valida credenciales (csrf)
+// GET|POST /logout  cierra la sesión. El POST lo usa el formulario de
+//                    app/Views/errors/prohibido.php para salir de un 403.
+$routes->get('login', 'Auth::index');
+$routes->post('login', 'Auth::autenticar', ['filter' => 'csrf']);
+$routes->get('logout', 'Auth::salir');
+$routes->post('logout', 'Auth::salir', ['filter' => 'csrf']);
+
 // ===== CONTROL CLINICO =====
 $routes->get('clinico', 'Clinico::index');
 $routes->post('clinico/guardar', 'Clinico::guardar');
