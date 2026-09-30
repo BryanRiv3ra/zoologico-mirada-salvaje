@@ -26,6 +26,8 @@
   --color-amber-soft: #fffbeb;
   --color-coral: #ef4444;
   --color-coral-soft: #fef2f2;
+  --color-violet: #8b5cf6;
+  --color-violet-soft: #f5f3ff;
 
   /* Fuentes y Formas */
   --font-title: 'Space Grotesk', sans-serif;
@@ -468,6 +470,7 @@ a {
 .color-emerald { --accent: var(--color-emerald); --accent-soft: var(--color-emerald-soft); }
 .color-amber { --accent: var(--color-amber); --accent-soft: var(--color-amber-soft); }
 .color-coral { --accent: var(--color-coral); --accent-soft: var(--color-coral-soft); }
+.color-violet { --accent: var(--color-violet); --accent-soft: var(--color-violet-soft); }
 
 /* ==========================================================================
    Módulo Limpieza (Form & Table)

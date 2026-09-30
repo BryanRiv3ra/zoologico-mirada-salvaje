@@ -23,6 +23,34 @@
   <!-- Grilla de Módulos -->
   <div class="cards-grid">
 
+    <!-- Módulo 0: Animales -->
+    <a href="<?= base_url('animales') ?>" class="action-card color-violet">
+      <div class="action-card__head">
+        <div class="action-card__icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3Z"/><path d="M4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7"/><path d="M4 12v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/><circle cx="9" cy="7" r=".6" fill="currentColor"/><circle cx="15" cy="7" r=".6" fill="currentColor"/></svg>
+        </div>
+        <span class="badge-tag">Fauna</span>
+      </div>
+      <div class="action-card__body">
+        <h3>Animales y Especies</h3>
+        <p>Registro de la fauna: especie, zona, sexo, edad y estado de cada animal.</p>
+      </div>
+      <div class="action-card__metrics">
+        <div class="metric-item">
+          <b>—</b>
+          <span>Animales activos</span>
+        </div>
+        <div class="metric-item">
+          <b>—</b>
+          <span>Especies</span>
+        </div>
+      </div>
+      <div class="action-card__cta">
+        <span>Ver registro</span>
+        <span class="arrow-icon">→</span>
+      </div>
+    </a>
+
     <!-- Módulo 1: Limpieza -->
     <a href="<?= base_url('limpieza') ?>" class="action-card color-aqua">
       <div class="action-card__head">

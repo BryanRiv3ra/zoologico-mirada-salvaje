@@ -34,6 +34,12 @@
         </a>
       </li>
       <li>
+        <a href="<?= base_url('animales') ?>" class="<?= (strpos(uri_string(), 'animales') === 0) ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3Z"/><path d="M4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7"/><path d="M4 12v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/><circle cx="9" cy="7" r=".6" fill="currentColor"/><circle cx="15" cy="7" r=".6" fill="currentColor"/></svg>
+          Animales
+        </a>
+      </li>
+      <li>
         <a href="<?= base_url('limpieza') ?>" class="<?= (strpos(uri_string(), 'limpieza') === 0) ? 'active' : '' ?>">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v9a5 5 0 0 0 5 5h1"/><path d="M9 4v9a5 5 0 0 1-5 5"/><path d="M15 3v7"/><path d="M12 6h6"/><circle cx="15" cy="18" r="3"/></svg>
           Limpieza y Hábitats
