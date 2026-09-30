@@ -52,7 +52,7 @@ class CrearUsuario extends BaseCommand
             CLI::write($this->listadoEmpleados($empleados), 'light_gray');
             CLI::newLine();
 
-            return self::FAIL;
+            return EXIT_ERROR;
         }
 
         // ---------------------------------------------------------------
@@ -66,7 +66,7 @@ class CrearUsuario extends BaseCommand
             CLI::error('Ya existe un usuario registrado con el correo ' . $email . '.');
             CLI::newLine();
 
-            return self::FAIL;
+            return EXIT_ERROR;
         }
 
         // ---------------------------------------------------------------
@@ -85,7 +85,7 @@ class CrearUsuario extends BaseCommand
             CLI::write('Roles disponibles: ' . ($roles === [] ? '(ninguno)' : implode(', ', $roles)), 'light_gray');
             CLI::newLine();
 
-            return self::FAIL;
+            return EXIT_ERROR;
         }
 
         // ---------------------------------------------------------------
@@ -94,7 +94,7 @@ class CrearUsuario extends BaseCommand
         $password = $this->pedirPassword();
 
         if ($password === null) {
-            return self::FAIL;
+            return EXIT_ERROR;
         }
 
         // ---------------------------------------------------------------
@@ -123,7 +123,7 @@ class CrearUsuario extends BaseCommand
             CLI::error('No se pudo crear el usuario: ' . $e->getMessage());
             CLI::newLine();
 
-            return self::FAIL;
+            return EXIT_ERROR;
         }
 
         $db->transComplete();
@@ -132,7 +132,7 @@ class CrearUsuario extends BaseCommand
             CLI::error('La transacción falló y se revirtió. No se creó ningún usuario.');
             CLI::newLine();
 
-            return self::FAIL;
+            return EXIT_ERROR;
         }
 
         $nombre = $empleados[$empleadoId];
@@ -144,7 +144,7 @@ class CrearUsuario extends BaseCommand
         CLI::write('  Rol:      ' . $rol, 'light_gray');
         CLI::newLine();
 
-        return self::SUCCESS;
+        return EXIT_SUCCESS;
     }
 
     /**
