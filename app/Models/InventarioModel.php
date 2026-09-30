@@ -38,4 +38,26 @@ class InventarioModel extends Model
                         ->set('stock_actual', 'stock_actual - ' . (float) $cantidad, false)
                         ->update();
     }
+
+    /**
+     * Lista únicamente los productos de inventario que son alimentos.
+     */
+    public function listaAlimentos(): array
+    {
+        return $this->where('tipo', 'alimento')
+                    ->orderBy('nombre', 'ASC')
+                    ->findAll();
+    }
+
+    /**
+     * Lista alimentos cuyo stock actual está en o debajo del stock mínimo.
+     */
+    public function alimentosConStockBajo(): array
+    {
+        return $this->where('tipo', 'alimento')
+                    ->where('stock_actual <= stock_minimo')
+                    ->orderBy('nombre', 'ASC')
+                    ->findAll();
+    }
+
 }
