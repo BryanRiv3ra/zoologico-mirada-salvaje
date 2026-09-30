@@ -7,7 +7,6 @@ use App\Libraries\Entradas\GeneradorQr;
 use App\Libraries\Entradas\ServicioVentas;
 use App\Libraries\Entradas\VentaException;
 use App\Models\Entradas\PromocionModel;
-use App\Models\Entradas\PromocionTarifaModel;
 use App\Models\Entradas\TarifaModel;
 use App\Models\Entradas\VentaModel;
 use App\Models\Entradas\VisitanteModel;

@@ -6,7 +6,6 @@ use App\Libraries\Entradas\GeneradorQr;
 use App\Libraries\Entradas\ServicioVentas;
 use App\Libraries\Entradas\VentaException;
 use App\Models\Entradas\PromocionModel;
-use App\Models\Entradas\PromocionTarifaModel;
 use App\Models\Entradas\TarifaModel;
 use App\Models\Entradas\VentaModel;
 use App\Models\Entradas\VisitanteModel;
@@ -14,6 +13,10 @@ use App\Models\Entradas\VisitanteModel;
 /**
  * Portal público de compra de entradas.
  * No requiere autenticación (solo protección CSRF en POST).
+ *
+ * Adaptado al modelo E-R real: no existe la tabla `entradas.promocion_tarifa`,
+ * asi que toda promoción vigente aplica a todas las tarifas activas (misma
+ * regla que Entradas\PuntoVenta::promosPorTarifa()).
  */
 class Portal extends BaseController
 {
@@ -21,30 +24,27 @@ class Portal extends BaseController
 
     private TarifaModel $tarifas;
     private PromocionModel $promociones;
-    private PromocionTarifaModel $promocionesTarifa;
 
     public function __construct()
     {
-        $this->tarifas           = model(TarifaModel::class);
-        $this->promociones       = model(PromocionModel::class);
-        $this->promocionesTarifa = model(PromocionTarifaModel::class);
+        $this->tarifas     = model(TarifaModel::class);
+        $this->promociones = model(PromocionModel::class);
     }
 
     public function index(): string
     {
-        $tarifas       = $this->tarifas->activas();
-        $promociones   = $this->promociones->activas();
-        $promosDetalle = [];
+        $tarifas     = $this->tarifas->activas();
+        $promociones = $this->promociones->activas();
 
+        // Sin tabla de relación: cada promoción aplica a todas las tarifas activas.
+        $idsTarifas = array_map(static fn (array $t): int => (int) $t['id'], $tarifas);
+
+        $promosDetalle = [];
         foreach ($promociones as $promo) {
-            $tarifasPromo = $this->promocionesTarifa
-                ->select('tarifa_id')
-                ->where('promocion_id', $promo['id'])
-                ->findAll();
             $promosDetalle[] = [
                 'promocion'    => $promo,
-                'tarifa_count' => count($tarifasPromo),
-                'tarifas'      => array_column($tarifasPromo, 'tarifa_id'),
+                'tarifa_count' => count($idsTarifas),
+                'tarifas'      => $idsTarifas,
             ];
         }
 
@@ -58,8 +58,8 @@ class Portal extends BaseController
 
     public function comprar(): string
     {
-        $tarifas     = $this->tarifas->activas();
-        $promosPorTarifa = $this->promosPorTarifa();
+        $tarifas         = $this->tarifas->activas();
+        $promosPorTarifa = $this->promosPorTarifa($tarifas);
 
         return view('portal/comprar', [
             'titulo'          => 'Comprar Entradas',
@@ -161,19 +161,22 @@ class Portal extends BaseController
         ]);
     }
 
-    private function promosPorTarifa(): array
+    /**
+     * Mapa [tarifa_id => [promociones...]].
+     *
+     * No existe tabla `entradas.promocion_tarifa` en el E-R actual, asi que
+     * toda promoción vigente se ofrece para todas las tarifas activas.
+     *
+     * @param list<array<string,mixed>> $tarifas Tarifas ya activas.
+     * @return array<int, list<array<string,mixed>>>
+     */
+    private function promosPorTarifa(array $tarifas): array
     {
-        $promos = $this->promociones->activas();
-        $mapa   = [];
+        $mapa = [];
 
-        foreach ($promos as $promo) {
-            $tarifasPromo = $this->promocionesTarifa
-                ->select('tarifa_id')
-                ->where('promocion_id', $promo['id'])
-                ->findAll();
-
-            foreach ($tarifasPromo as $relacion) {
-                $mapa[(int) $relacion['tarifa_id']][] = $promo;
+        foreach ($this->promociones->activas() as $promo) {
+            foreach ($tarifas as $tarifa) {
+                $mapa[(int) $tarifa['id']][] = $promo;
             }
         }
 

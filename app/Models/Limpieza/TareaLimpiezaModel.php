@@ -17,6 +17,14 @@ class TareaLimpiezaModel extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['zona_id', 'descripcion', 'frecuencia', 'activo'];
 
+    /**
+     * PostgreSQL devuelve los booleanos como 't'/'f'; sin este cast una tarea
+     * inactiva llega con 'f', que PHP evalúa como true en las vistas.
+     *
+     * @var list<string>
+     */
+    protected array $casts = ['activo' => 'boolean'];
+
     protected $validationRules = [
         'zona_id'    => 'required|is_natural_no_zero',
         'descripcion' => 'required|max_length[255]',

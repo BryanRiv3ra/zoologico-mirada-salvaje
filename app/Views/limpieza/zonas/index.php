@@ -55,13 +55,13 @@
               <td><?= esc($zona['ubicacion'] ?? '—') ?></td>
               <td><?= esc($zona['capacidad'] ?? '—') ?></td>
               <td>
-                <span class="status-chip is-<?= (int) $zona['activo'] === 1 ? 'activa' : 'inactivo' ?>">
-                  <?= (int) $zona['activo'] === 1 ? 'Activa' : 'Inactiva' ?>
+                <span class="status-chip is-<?= es_activo($zona['activo']) ? 'activa' : 'inactivo' ?>">
+                  <?= es_activo($zona['activo']) ? 'Activa' : 'Inactiva' ?>
                 </span>
               </td>
               <td class="td-actions">
                 <a href="<?= base_url('limpieza/zonas/editar/' . $zona['id']) ?>">Editar</a>
-                <?php if ((int) $zona['activo'] === 1): ?>
+                <?php if (es_activo($zona['activo'])): ?>
                   <form method="post" action="<?= base_url('limpieza/zonas/desactivar/' . $zona['id']) ?>" class="inline-form" onsubmit="return confirm('¿Desactivar esta zona?');">
                     <?= csrf_field() ?>
                     <button type="submit" class="link-danger">Desactivar</button>

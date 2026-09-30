@@ -33,13 +33,13 @@
             <td><?= esc(ucwords(str_replace('_', ' ', $tarifa['tipo_visitante']))) ?></td>
             <td class="price-tag">Q <?= number_format((float) $tarifa['precio'], 2) ?></td>
             <td>
-              <span class="status-chip is-<?= (int) $tarifa['activo'] === 1 ? 'activa' : 'inactivo' ?>">
-                <?= (int) $tarifa['activo'] === 1 ? 'Activa' : 'Inactiva' ?>
+              <span class="status-chip is-<?= es_activo($tarifa['activo']) ? 'activa' : 'inactivo' ?>">
+                <?= es_activo($tarifa['activo']) ? 'Activa' : 'Inactiva' ?>
               </span>
             </td>
             <td class="td-actions">
               <a href="<?= base_url('entradas/tarifas/editar/' . $tarifa['id']) ?>">Editar</a>
-              <?php if ((int) $tarifa['activo'] === 1): ?>
+              <?php if (es_activo($tarifa['activo'])): ?>
                 <form class="inline-form" method="post" action="<?= base_url('entradas/tarifas/desactivar/' . $tarifa['id']) ?>"
                       onsubmit="return confirm('¿Desactivar esta tarifa? Ya no se ofrecerá en ventas nuevas.');">
                   <?= csrf_field() ?>

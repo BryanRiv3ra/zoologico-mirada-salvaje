@@ -41,7 +41,7 @@
   <?php if ($tarifa !== null): ?>
     <div class="form-field" style="max-width:240px;">
       <label class="checkbox-line">
-        <input type="checkbox" name="activo" value="1" <?= (int) $tarifa['activo'] === 1 ? 'checked' : '' ?>> Tarifa activa
+        <input type="checkbox" name="activo" value="1" <?= es_activo($tarifa['activo']) ? 'checked' : '' ?>> Tarifa activa
       </label>
     </div>
   <?php endif; ?>

@@ -80,7 +80,7 @@ class Tareas extends BaseController
 
         // Solo se crean tareas en zonas activas.
         $zona = $this->zonas->find($datos['zona_id']);
-        if ($zona === null || (int) $zona['activo'] !== 1) {
+        if ($zona === null || ! es_activo($zona['activo'])) {
             return redirect()->back()->withInput()->with('error', 'Solo se pueden crear tareas en zonas activas.');
         }
 

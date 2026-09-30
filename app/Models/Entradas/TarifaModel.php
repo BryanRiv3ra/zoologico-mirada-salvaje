@@ -15,6 +15,14 @@ class TarifaModel extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['nombre', 'tipo_visitante', 'precio', 'activo'];
 
+    /**
+     * PostgreSQL devuelve los booleanos como 't'/'f'; sin este cast una tarifa
+     * inactiva llega con 'f', que PHP evalúa como true en las vistas.
+     *
+     * @var list<string>
+     */
+    protected array $casts = ['activo' => 'boolean'];
+
     protected $validationRules = [
         'nombre'        => 'required|max_length[100]',
         'tipo_visitante' => 'required|max_length[50]',

@@ -10,7 +10,30 @@ CREATE SCHEMA IF NOT EXISTS limpieza;
 -- ----------------------------------------------------------------------------
 -- core.zonas: agregar columna activo (D1: Desactivar zona / Zona.desactivar()).
 -- Tabla compartida con Alimentación (animales.zona_id): solo se agrega columna.
+--
+-- OJO: en la BD compartida esta columna YA EXISTE como SMALLINT (la aplico una
+-- version anterior de la migracion). Un simple `ADD COLUMN IF NOT EXISTS` la
+-- dejaria intacta y `where('activo', true)` seguiria fallando con
+--     ERROR:  operator does not exist: smallint = boolean
+-- Por eso primero se convierte a BOOLEAN y solo despues se crea si no existe.
+-- Es idempotente: al volver a ejecutarlo el bloque DO no encuentra 'smallint'.
 -- ----------------------------------------------------------------------------
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_schema = 'core'
+          AND table_name   = 'zonas'
+          AND column_name  = 'activo'
+          AND data_type    = 'smallint'
+    ) THEN
+        ALTER TABLE core.zonas ALTER COLUMN activo DROP DEFAULT;
+        ALTER TABLE core.zonas ALTER COLUMN activo TYPE BOOLEAN USING activo <> 0;
+        ALTER TABLE core.zonas ALTER COLUMN activo SET DEFAULT TRUE;
+    END IF;
+END $$;
+
 ALTER TABLE core.zonas ADD COLUMN IF NOT EXISTS activo BOOLEAN NOT NULL DEFAULT TRUE;
 
 -- ----------------------------------------------------------------------------
@@ -111,3 +134,27 @@ BEGIN
 END $$;
 
 CREATE INDEX IF NOT EXISTS idx_registros_asignacion ON limpieza.registros_limpieza (asignacion_id);
+
+-- ----------------------------------------------------------------------------
+-- Verificacion (solo SELECT, no modifica nada).
+-- Las 4 filas de 'activo' deben salir con data_type = 'boolean'.
+-- La fila de asignacion_id debe salir con data_type = 'integer'.
+-- Debe devolver 5 filas en total.
+-- ----------------------------------------------------------------------------
+SELECT table_schema, table_name, column_name, data_type, is_nullable, column_default
+FROM information_schema.columns
+WHERE (table_schema, table_name, column_name) IN (
+    ('core',      'zonas',             'activo'),
+    ('entradas',  'tarifas',           'activo'),
+    ('entradas',  'promociones',       'activo'),
+    ('limpieza',  'tareas_limpieza',   'activo'),
+    ('limpieza',  'registros_limpieza', 'asignacion_id')
+)
+ORDER BY table_schema, table_name, column_name;
+
+-- Debe devolver 2 filas: asignaciones_limpieza y tarea_insumo.
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'limpieza'
+  AND table_name IN ('asignaciones_limpieza', 'tarea_insumo')
+ORDER BY table_name;

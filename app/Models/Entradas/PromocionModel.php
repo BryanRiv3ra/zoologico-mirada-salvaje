@@ -19,6 +19,14 @@ class PromocionModel extends Model
         'nombre', 'descripcion', 'descuento', 'codigo', 'fecha_inicio', 'fecha_fin', 'activo',
     ];
 
+    /**
+     * PostgreSQL devuelve los booleanos como 't'/'f'; sin este cast una
+     * promoción inactiva llega con 'f', que PHP evalúa como true en las vistas.
+     *
+     * @var list<string>
+     */
+    protected array $casts = ['activo' => 'boolean'];
+
     protected $validationRules = [
         'nombre'       => 'required|max_length[150]',
         'descripcion'  => 'permit_empty|max_length[65535]',
