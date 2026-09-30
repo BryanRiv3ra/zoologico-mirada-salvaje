@@ -7,12 +7,11 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
 /**
- * Filtro de autenticación (provisional).
+ * Filtro de autenticación.
  *
- * Protege las rutas de los módulos Limpieza y Entradas exigiendo sesión activa.
- * La autenticación completa (login, roles, seeder) la implementa el integrante
- * del módulo core-autenticacion; este filtro conserva la misma interfaz prevista
- * allí y debe ser reemplazado al integrar esa rama.
+ * Protege las rutas de los módulos exigiendo sesión activa. Cuando no la hay,
+ * recuerda la URL solicitada en session('redirect_to') para que Auth::autenticar()
+ * devuelva al usuario al mismo módulo después de iniciar sesión.
  */
 class AuthFilter implements FilterInterface
 {
@@ -24,7 +23,9 @@ class AuthFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (session('usuario_id') === null) {
-            return redirect()->to('/')->with('error', 'Debes iniciar sesión para acceder a este módulo.');
+            session()->set('redirect_to', current_url());
+
+            return redirect()->to('/login')->with('error', 'Debes iniciar sesión para acceder a este módulo.');
         }
 
         return null;
