@@ -17,6 +17,36 @@ $routes->post('login', 'Auth::autenticar', ['filter' => 'csrf']);
 $routes->get('logout', 'Auth::salir');
 $routes->post('logout', 'Auth::salir', ['filter' => 'csrf']);
 
+// ==========================================================================
+// ANIMALES Y ESPECIES
+// ==========================================================================
+// El grupo ya exige sesión (auth) y CSRF en los POST (csrf).
+//   lectura del listado   → administrador, supervisor
+//   escritura (crear,
+//   editar, baja)        → administrador
+$routes->group('animales', ['filter' => ['auth', 'csrf']], static function ($routes) {
+    $routes->get('/', 'Animales\Animales::index', ['filter' => 'rol:administrador,supervisor']);
+
+    // Escritura: solo administrador
+    $routes->group('', ['filter' => 'rol:administrador'], static function ($routes) {
+        $routes->get('nuevo', 'Animales\Animales::nuevo');
+        $routes->post('guardar', 'Animales\Animales::guardar');
+        $routes->get('editar/(:num)', 'Animales\Animales::editar/$1');
+        $routes->post('actualizar/(:num)', 'Animales\Animales::actualizar/$1');
+        $routes->post('baja/(:num)', 'Animales\Animales::darDeBaja/$1');
+
+        // Especies: TODO el CRUD es de escritura, así que todo va aquí.
+        $routes->get('especies', 'Animales\Especies::index');
+        $routes->get('especies/nueva', 'Animales\Especies::nueva');
+        $routes->post('especies/guardar', 'Animales\Especies::guardar');
+        $routes->get('especies/editar/(:num)', 'Animales\Especies::editar/$1');
+        $routes->post('especies/actualizar/(:num)', 'Animales\Especies::actualizar/$1');
+        $routes->post('especies/eliminar/(:num)', 'Animales\Especies::eliminar/$1');
+    });
+});
+
+// ===== FIN ANIMALES =====
+
 // ===== CONTROL CLINICO =====
 $routes->get('clinico', 'Clinico::index');
 $routes->post('clinico/guardar', 'Clinico::guardar');
