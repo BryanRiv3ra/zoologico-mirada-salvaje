@@ -21,8 +21,9 @@
       <div class="ticket-meta">
         <div><span>Venta:</span> <strong><?= esc($venta['codigo']) ?></strong></div>
         <div><span>Fecha:</span> <?= esc($venta['fecha']) ?></div>
-        <div><span>Cliente:</span> <?= esc($venta['cliente_nombre'] ?? '—') ?></div>
-        <div><span>Correo:</span> <?= esc($venta['cliente_email'] ?? '—') ?></div>
+        <div><span>Cliente:</span> <?= esc($venta['visitante_nombre'] ?? '—') ?></div>
+        <div><span>Correo:</span> <?= esc($venta['visitante_email'] ?? '—') ?></div>
+        <div><span>Boletos:</span> <strong><?= count($boletos) ?></strong></div>
       </div>
 
       <table class="styled-table">
@@ -30,7 +31,7 @@
           <tr><th>Tarifa</th><th>Fecha visita</th><th>Precio</th><th>Promoción</th><th>Código QR</th></tr>
         </thead>
         <tbody>
-          <?php foreach ($venta['boletos'] as $boleto): ?>
+          <?php foreach ($boletos as $boleto): ?>
             <tr>
               <td>
                 <strong><?= esc($boleto['tarifa_nombre']) ?></strong>
@@ -50,9 +51,9 @@
       </table>
 
       <div class="ticket-totales">
-        <div>Subtotal: <strong>Q <?= number_format((float) $venta['subtotal'], 2) ?></strong></div>
-        <div>Descuento: <strong>-Q <?= number_format((float) $venta['descuento'], 2) ?></strong></div>
-        <div class="total-final">Total pagado: <strong>Q <?= number_format((float) $venta['total'], 2) ?></strong></div>
+        <div>Subtotal: <strong>Q <?= number_format((float) $subtotal, 2) ?></strong></div>
+        <div>Descuento: <strong>-Q <?= number_format((float) $descuento, 2) ?></strong></div>
+        <div class="total-final">Total pagado: <strong>Q <?= number_format((float) $total, 2) ?></strong></div>
       </div>
 
       <div class="ticket-footer">
