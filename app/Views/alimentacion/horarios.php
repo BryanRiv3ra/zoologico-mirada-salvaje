@@ -31,6 +31,7 @@
     <h2>Registrar horario</h2>
 
     <form action="<?= base_url('alimentacion/horarios/guardar') ?>" method="post" class="modern-form">
+        <?= csrf_field() ?>
         <div class="form-table-layout">
             <div class="form-group">
                 <label for="dieta_id">Dieta</label>

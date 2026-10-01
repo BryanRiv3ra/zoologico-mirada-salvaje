@@ -35,6 +35,7 @@
       </div>
 
       <form method="post" action="<?= base_url('clinico/guardar') ?>" class="modern-form">
+        <?= csrf_field() ?>
 
         <div class="form-field">
           <label for="animal_id">Animal</label>

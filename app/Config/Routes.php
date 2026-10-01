@@ -48,16 +48,22 @@ $routes->group('animales', ['filter' => ['auth', 'csrf']], static function ($rou
 // ===== FIN ANIMALES =====
 
 // ===== CONTROL CLINICO =====
-$routes->get('clinico', 'Clinico::index');
-$routes->post('clinico/guardar', 'Clinico::guardar');
-$routes->get('clinico/editar/(:num)', 'Clinico::editar/$1');
-$routes->post('clinico/actualizar/(:num)', 'Clinico::actualizar/$1');
-$routes->get('clinico/eliminar/(:num)', 'Clinico::eliminar/$1');
-//vacunas
-$routes->get('clinico/vacunas', 'ClinicoVacunas::index');
-$routes->post('clinico/vacunas/guardar', 'ClinicoVacunas::guardar');
-$routes->post('clinico/vacunas/guardar-vacuna', 'ClinicoVacunas::guardarVacuna');
-$routes->get('clinico/vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
+// TODO(roles): aquí solo se exige sesión (auth), sin filtro de rol, porque en
+// core.roles NO existe un rol veterinario ni cuidador y no se quiere bloquear a
+// nadie. Cuando se defina un rol clínico, añadir 'rol:<rol>' al grupo.
+$routes->group('clinico', ['filter' => ['auth', 'csrf']], static function ($routes) {
+    $routes->get('/', 'Clinico::index');
+    $routes->post('guardar', 'Clinico::guardar');
+    $routes->get('editar/(:num)', 'Clinico::editar/$1');
+    $routes->post('actualizar/(:num)', 'Clinico::actualizar/$1');
+    $routes->get('eliminar/(:num)', 'Clinico::eliminar/$1');
+
+    // Vacunas
+    $routes->get('vacunas', 'ClinicoVacunas::index');
+    $routes->post('vacunas/guardar', 'ClinicoVacunas::guardar');
+    $routes->post('vacunas/guardar-vacuna', 'ClinicoVacunas::guardarVacuna');
+    $routes->get('vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
+});
 // ===== FIN CONTROL CLINICO =====
 
 // ===== LIMPIEZA =====
@@ -118,7 +124,9 @@ $routes->group('limpieza', ['filter' => ['auth', 'csrf']], static function ($rou
     });
 });
 // ===== ALIMENTACIÓN =====
-$routes->group('alimentacion', static function ($routes) {
+// TODO(roles): solo se exige sesión (auth), sin filtro de rol: no existe un rol
+// de cuidador de alimentación en core.roles. Cuando exista, añadir 'rol:<rol>'.
+$routes->group('alimentacion', ['filter' => ['auth', 'csrf']], static function ($routes) {
     $routes->get('/', 'Alimentacion\Inicio::index');
 
     // Dietas por animal

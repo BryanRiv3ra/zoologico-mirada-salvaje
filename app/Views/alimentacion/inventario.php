@@ -31,6 +31,7 @@
     <h2>Registrar alimento</h2>
 
     <form action="<?= base_url('alimentacion/inventario/guardar') ?>" method="post" class="modern-form">
+        <?= csrf_field() ?>
         <div class="form-table-layout">
             <div class="form-group">
                 <label for="nombre">Nombre del alimento</label>

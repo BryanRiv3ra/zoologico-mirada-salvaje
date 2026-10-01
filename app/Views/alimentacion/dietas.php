@@ -36,6 +36,7 @@
     </div>
 
     <form method="post" action="<?= base_url('alimentacion/dietas/guardar') ?>" class="modern-form">
+      <?= csrf_field() ?>
 
       <div class="form-field">
         <label for="animal_id">Animal</label>

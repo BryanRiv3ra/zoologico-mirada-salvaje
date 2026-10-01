@@ -24,6 +24,7 @@
     </div>
 
     <form method="post" action="<?= base_url('clinico/actualizar/' . $tratamiento['id']) ?>" class="modern-form">
+      <?= csrf_field() ?>
 
       <div class="form-field">
         <label for="dosis">Dosis</label>

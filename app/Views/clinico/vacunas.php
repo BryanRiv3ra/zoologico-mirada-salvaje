@@ -32,6 +32,7 @@
       </div>
 
       <form method="post" action="<?= base_url('clinico/vacunas/guardar') ?>" class="modern-form">
+        <?= csrf_field() ?>
 
         <div class="form-field">
           <label for="animal_id">Animal</label>
@@ -93,6 +94,7 @@
       </div>
 
       <form method="post" action="<?= base_url('clinico/vacunas/guardar-vacuna') ?>" class="modern-form">
+        <?= csrf_field() ?>
         <div class="form-field">
           <label for="nombre">Nombre</label>
           <input type="text" id="nombre" name="nombre" placeholder="Ej: Rabia" required>

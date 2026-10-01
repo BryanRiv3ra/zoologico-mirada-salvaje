@@ -31,6 +31,7 @@
     <h2>Registrar alimentación realizada</h2>
 
     <form action="<?= base_url('alimentacion/registros/guardar') ?>" method="post" class="modern-form">
+        <?= csrf_field() ?>
         <div class="form-table-layout">
             <div class="form-group">
                 <label for="horario_id">Horario de alimentación</label>
