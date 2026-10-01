@@ -13,6 +13,18 @@
     <?= session('success') !== null ? '<div class="alert-box is-success">' . esc(session('success')) . '</div>' : '' ?>
 
     <div class="ticket-sheet">
+      <div class="print-header">
+        <div class="print-header__brand">Mirada Salvaje</div>
+        <div class="print-header__row">
+          <span><strong>Comprobante:</strong> <?= esc($venta['codigo']) ?></span>
+          <span><strong>Fecha de compra:</strong> <?= esc(date('d/m/Y H:i', strtotime((string) $venta['fecha']))) ?></span>
+          <span><strong>Impreso:</strong> <?= esc(date('d/m/Y H:i')) ?></span>
+        </div>
+        <div class="print-header__row">
+          <span><strong>Cliente:</strong> <?= esc($venta['visitante_nombre'] ?? '—') ?></span>
+        </div>
+      </div>
+
       <div class="box-head flex-between">
         <h3>Comprobante de compra</h3>
         <span class="final-msg">PAGADO</span>
@@ -42,7 +54,7 @@
               <td><?= $boleto['promocion_nombre'] ? esc($boleto['promocion_nombre']) : '—' ?></td>
               <td>
                 <img src="<?= esc($qr->imagenUrl($boleto['codigo_qr'], 90)) ?>"
-                     alt="QR <?= esc($boleto['codigo_qr']) ?>" class="qr-img" loading="lazy">
+                     alt="QR <?= esc($boleto['codigo_qr']) ?>" class="qr-img">
                 <div><code class="qr-code-text"><?= esc($boleto['codigo_qr']) ?></code></div>
               </td>
             </tr>
@@ -61,8 +73,8 @@
           <p class="text-muted">Presenta cada código QR en el ingreso.</p>
           <p class="text-muted">Método de pago: <?= esc(ucfirst($venta['tipo_pago'])) ?>.</p>
         </div>
-        <div style="text-align:right;min-width:190px;">
-          <button class="btn-module" onclick="window.print()">Imprimir</button>
+        <div class="no-print" style="text-align:right;min-width:190px;">
+          <button type="button" data-imprimir class="btn-module">Imprimir</button>
           <a class="btn-module btn-module--ghost" href="<?= base_url('portal') ?>">Volver</a>
         </div>
       </div>
@@ -71,5 +83,7 @@
   </main>
 
   <footer class="portal-footer">Mirada Salvaje · Análisis de Sistemas II</footer>
+
+  <?= $this->include('entradas/_imprimir_script') ?>
 </body>
 </html>
