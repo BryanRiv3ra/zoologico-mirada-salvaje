@@ -26,6 +26,8 @@
   --color-amber-soft: #fffbeb;
   --color-coral: #ef4444;
   --color-coral-soft: #fef2f2;
+  --color-violet: #8b5cf6;
+  --color-violet-soft: #f5f3ff;
 
   /* Fuentes y Formas */
   --font-title: 'Space Grotesk', sans-serif;
@@ -468,6 +470,7 @@ a {
 .color-emerald { --accent: var(--color-emerald); --accent-soft: var(--color-emerald-soft); }
 .color-amber { --accent: var(--color-amber); --accent-soft: var(--color-amber-soft); }
 .color-coral { --accent: var(--color-coral); --accent-soft: var(--color-coral-soft); }
+.color-violet { --accent: var(--color-violet); --accent-soft: var(--color-violet-soft); }
 
 /* ==========================================================================
    Módulo Limpieza (Form & Table)
@@ -571,6 +574,80 @@ a {
 .submit-btn:hover {
   background: #1e293b;
   transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   AUTENTICACION
+   ========================================================================== */
+
+/* Enlace de cierre de sesion dentro del .user-avatar-pill del header */
+.user-pill__logout {
+  margin-left: 4px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.user-pill__logout:hover {
+  color: var(--color-coral);
+}
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--bg-app);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+}
+
+.login-card__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* El bloque de marca esta disenado para el sidebar oscuro: sobre la tarjeta
+   blanca hay que volver a oscurecer el texto o seria invisible. */
+.login-card__brand .brand-badge__text span {
+  color: var(--text-dark);
+}
+
+.login-card__title {
+  margin: 0 0 4px;
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.login-card__sub {
+  margin: 0 0 20px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.login-card__foot {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--text-sub);
 }
 
 .table-container {

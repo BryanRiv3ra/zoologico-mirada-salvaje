@@ -1,0 +1,147 @@
+/* ==========================================================================
+   MÓDULO ANIMALES
+   --------------------------------------------------------------------------
+   Estilos propios del módulo (patrón equivalente a entradas.css).
+   Cargado desde los controladores Animales\ con:
+       'cssExtra' => 'animales.css'
+   ========================================================================== */
+
+/* --- Botón de acción principal de la cabecera de página ------------------ */
+.btn-module {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--sidebar-bg);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.btn-module:hover {
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+
+.btn-module--sm {
+  padding: 7px 12px;
+  font-size: 0.8rem;
+}
+
+/* --- Barra de filtros --------------------------------------------------- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.filter-bar .form-field {
+  margin-bottom: 0;
+  min-width: 170px;
+}
+
+.auto-submit {
+  cursor: pointer;
+}
+
+/* --- Celdas de acción --------------------------------------------------- */
+.td-actions {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.td-actions a {
+  color: var(--color-aqua);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.inline-form {
+  display: inline;
+  margin-left: 10px;
+}
+
+.link-danger {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-coral);
+  font-weight: 600;
+  font-size: 0.82rem;
+  font-family: var(--font-text);
+}
+
+.link-danger:hover {
+  text-decoration: underline;
+}
+
+/* --- Chips de estado (variantes de core.animales.estado) ---------------- */
+.status-chip.is-activa {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.status-chip.is-inactivo {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.status-chip.is-en_curso {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.status-chip.is-pendiente {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+/* --- Chip neutro para sexo sin especificar ----------------------------- */
+.type-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* --- Grilla de dos columnas para el formulario ------------------------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+}
+
+.form-grid--full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Resumen de bajas (bloque explicativo) ----------------------------- */
+.info-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--color-aqua);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.info-box strong {
+  color: var(--text-dark);
+}

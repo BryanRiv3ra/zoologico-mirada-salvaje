@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= isset($titulo) ? esc($titulo) . ' · Mirada Salvaje' : 'Mirada Salvaje · Control' ?></title>
   <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+  <?php if (! empty($cssExtra)): ?>
+    <link rel="stylesheet" href="<?= base_url('assets/css/' . esc($cssExtra)) ?>">
+  <?php endif; ?>
 </head>
 <body>
 
@@ -28,6 +31,12 @@
         <a href="<?= base_url('/') ?>" class="<?= (uri_string() == '' || uri_string() == '/') ? 'active' : '' ?>">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
           Panel General
+        </a>
+      </li>
+      <li>
+        <a href="<?= base_url('animales') ?>" class="<?= (strpos(uri_string(), 'animales') === 0) ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3Z"/><path d="M4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7"/><path d="M4 12v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/><circle cx="9" cy="7" r=".6" fill="currentColor"/><circle cx="15" cy="7" r=".6" fill="currentColor"/></svg>
+          Animales
         </a>
       </li>
       <li>
@@ -78,10 +87,22 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           <?= date('d M, Y') ?>
         </div>
-        <div class="user-avatar-pill">
-          <span class="avatar-letter">A</span>
-          <span>Admin</span>
-        </div>
+        <?php if (session('usuario_id') !== null): ?>
+          <?php
+          // Inicial para el avatar: "Ana Pérez" -> "A"
+          $nombreSesion = (string) (session('nombre') ?? 'Usuario');
+          $inicial      = mb_strtoupper(mb_substr(trim($nombreSesion), 0, 1));
+          ?>
+          <div class="user-avatar-pill">
+            <span class="avatar-letter"><?= esc($inicial) ?></span>
+            <span><?= esc($nombreSesion) ?></span>
+            <a href="<?= base_url('logout') ?>" class="user-pill__logout">Cerrar sesión</a>
+          </div>
+        <?php else: ?>
+          <a href="<?= base_url('login') ?>" class="user-pill__logout" style="margin:0;padding:0;border:none;">
+            Iniciar sesión
+          </a>
+        <?php endif; ?>
       </div>
     </header>
 
