@@ -1,14 +1,29 @@
 <?= $this->include('templates/header') ?>
 
-<div class="page-title-row flex-between">
+<?php
+  $cajero = trim(($venta['empleado_nombre'] ?? '') . ' ' . ($venta['empleado_apellido'] ?? ''));
+?>
+
+<div class="print-header">
+  <div class="print-header__brand">Mirada Salvaje</div>
+  <div class="print-header__row">
+    <span><strong>Venta:</strong> <?= esc($venta['codigo']) ?></span>
+    <span><strong>Fecha de venta:</strong> <?= esc(date('d/m/Y H:i', strtotime((string) $venta['fecha']))) ?></span>
+    <span><strong>Impreso:</strong> <?= esc(date('d/m/Y H:i')) ?></span>
+  </div>
+  <div class="print-header__row">
+    <span><strong>Visitante:</strong> <?= esc($venta['visitante_nombre'] ?? '—') ?></span>
+  </div>
+</div>
+
+<div class="page-title-row flex-between no-print">
   <div>
     <h2>Venta <?= esc($venta['codigo']) ?></h2>
-    <p>Cajero: <?= esc(trim(($venta['empleado_nombre'] ?? '') . ' ' . ($venta['empleado_apellido'] ?? ''))) ?> ·
-      <?= esc($venta['fecha']) ?></p>
+    <p><?= $cajero !== '' ? 'Cajero: ' . esc($cajero) . ' · ' : '' ?><?= esc($venta['fecha']) ?></p>
   </div>
   <div>
     <a href="<?= base_url('entradas/taquilla') ?>" class="btn-module">← Taquilla</a>
-    <button onclick="window.print()" class="btn-module">Imprimir</button>
+    <button type="button" data-imprimir class="btn-module">Imprimir</button>
   </div>
 </div>
 
@@ -39,7 +54,7 @@
             <td>Q <?= number_format((float) $boleto['precio'], 2) ?></td>
             <td><?= $boleto['promocion_nombre'] ? esc($boleto['promocion_nombre']) : '—' ?></td>
             <td>
-              <img src="<?= esc($qr->imagenUrl($boleto['codigo_qr'], 90)) ?>" alt="QR" class="qr-img" loading="lazy">
+              <img src="<?= esc($qr->imagenUrl($boleto['codigo_qr'], 90)) ?>" alt="QR" class="qr-img">
               <div><code class="qr-code-text"><?= esc($boleto['codigo_qr']) ?></code></div>
             </td>
           </tr>
@@ -53,13 +68,13 @@
       <div class="box-head">
         <h4>Totales</h4>
       </div>
-      <p>Sustotal: <strong>Q <?= number_format((float) $venta['subtotal'], 2) ?></strong></p>
+      <p>Subtotal: <strong>Q <?= number_format((float) $venta['subtotal'], 2) ?></strong></p>
       <p>Descuento: <strong>-Q <?= number_format((float) $venta['descuento'], 2) ?></strong></p>
       <p class="total-final">Total: <strong>Q <?= number_format((float) $venta['total'], 2) ?></strong></p>
       <p class="text-muted">Método: <?= esc(ucfirst($venta['tipo_pago'])) ?> · <?= esc(ucfirst($venta['tipo_venta'])) ?></p>
     </div>
 
-    <div class="content-box">
+    <div class="content-box no-print">
       <div class="box-head">
         <h4>Anulación</h4>
       </div>
@@ -84,5 +99,7 @@
     </div>
   </div>
 </div>
+
+<?= $this->include('entradas/_imprimir_script') ?>
 
 <?= $this->include('templates/footer') ?>

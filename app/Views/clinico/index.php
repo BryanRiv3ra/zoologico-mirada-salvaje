@@ -35,6 +35,7 @@
       </div>
 
       <form method="post" action="<?= base_url('clinico/guardar') ?>" class="modern-form">
+        <?= csrf_field() ?>
 
         <div class="form-field">
           <label for="animal_id">Animal</label>
@@ -156,9 +157,11 @@
                   </td>
                   <td>
                     <a href="<?= base_url('clinico/editar/' . $t['id']) ?>" style="margin-right:10px;">Editar</a>
-                    <a href="<?= base_url('clinico/eliminar/' . $t['id']) ?>"
-                       onclick="return confirm('¿Eliminar este tratamiento? El stock ya descontado no se restaura.');"
-                       style="color:#ef4444;">Eliminar</a>
+                    <form method="post" action="<?= base_url('clinico/eliminar/' . $t['id']) ?>" style="display:inline;"
+                          onsubmit="return confirm('¿Eliminar este tratamiento? El stock ya descontado no se restaura.');">
+                      <?= csrf_field() ?>
+                      <button type="submit" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;color:#ef4444;">Eliminar</button>
+                    </form>
                   </td>
                 </tr>
               <?php endforeach; ?>

@@ -31,6 +31,7 @@
     <h2>Registrar horario</h2>
 
     <form action="<?= base_url('alimentacion/horarios/guardar') ?>" method="post" class="modern-form">
+        <?= csrf_field() ?>
         <div class="form-table-layout">
             <div class="form-group">
                 <label for="dieta_id">Dieta</label>
@@ -97,13 +98,14 @@
                             </span>
                         </td>
                         <td>
-                            <a 
-                                href="<?= base_url('alimentacion/horarios/eliminar/' . $horario['id']) ?>" 
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Eliminar este horario?')"
+                            <form method="post" action="<?= base_url('alimentacion/horarios/eliminar/' . $horario['id']) ?>" style="display:inline;"
+                                  onsubmit="return confirm('¿Eliminar este horario?')"
                             >
-                                Eliminar
-                            </a>
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

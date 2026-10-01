@@ -36,6 +36,7 @@
     </div>
 
     <form method="post" action="<?= base_url('alimentacion/dietas/guardar') ?>" class="modern-form">
+      <?= csrf_field() ?>
 
       <div class="form-field">
         <label for="animal_id">Animal</label>
@@ -107,11 +108,13 @@
                   </span>
                 </td>
                 <td>
-                  <a href="<?= base_url('alimentacion/dietas/eliminar/' . $dieta['id']) ?>"
-                     onclick="return confirm('¿Eliminar esta dieta?');"
-                     style="color:#ef4444;">
-                    Eliminar
-                  </a>
+                  <form method="post" action="<?= base_url('alimentacion/dietas/eliminar/' . $dieta['id']) ?>" style="display:inline;"
+                        onsubmit="return confirm('¿Eliminar esta dieta?');">
+                    <?= csrf_field() ?>
+                    <button type="submit" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;color:#ef4444;">
+                      Eliminar
+                    </button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>

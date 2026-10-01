@@ -48,16 +48,23 @@ $routes->group('animales', ['filter' => ['auth', 'csrf']], static function ($rou
 // ===== FIN ANIMALES =====
 
 // ===== CONTROL CLINICO =====
-$routes->get('clinico', 'Clinico::index');
-$routes->post('clinico/guardar', 'Clinico::guardar');
-$routes->get('clinico/editar/(:num)', 'Clinico::editar/$1');
-$routes->post('clinico/actualizar/(:num)', 'Clinico::actualizar/$1');
-$routes->get('clinico/eliminar/(:num)', 'Clinico::eliminar/$1');
-//vacunas
-$routes->get('clinico/vacunas', 'ClinicoVacunas::index');
-$routes->post('clinico/vacunas/guardar', 'ClinicoVacunas::guardar');
-$routes->post('clinico/vacunas/guardar-vacuna', 'ClinicoVacunas::guardarVacuna');
-$routes->get('clinico/vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
+// TODO(roles): aquí solo se exige sesión (auth), sin filtro de rol, porque en
+// core.roles NO existe un rol veterinario ni cuidador y no se quiere bloquear a
+// nadie. Cuando se defina un rol clínico, añadir 'rol:<rol>' al grupo.
+$routes->group('clinico', ['filter' => ['auth', 'csrf']], static function ($routes) {
+    $routes->get('/', 'Clinico::index');
+    $routes->post('guardar', 'Clinico::guardar');
+    $routes->get('editar/(:num)', 'Clinico::editar/$1');
+    $routes->post('actualizar/(:num)', 'Clinico::actualizar/$1');
+    // Eliminar por POST: antes era GET y se borraba con solo abrir el enlace.
+    $routes->post('eliminar/(:num)', 'Clinico::eliminar/$1');
+
+    // Vacunas
+    $routes->get('vacunas', 'ClinicoVacunas::index');
+    $routes->post('vacunas/guardar', 'ClinicoVacunas::guardar');
+    $routes->post('vacunas/guardar-vacuna', 'ClinicoVacunas::guardarVacuna');
+    $routes->post('vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
+});
 // ===== FIN CONTROL CLINICO =====
 
 // ===== LIMPIEZA =====
@@ -118,28 +125,31 @@ $routes->group('limpieza', ['filter' => ['auth', 'csrf']], static function ($rou
     });
 });
 // ===== ALIMENTACIÓN =====
-$routes->group('alimentacion', static function ($routes) {
+// TODO(roles): solo se exige sesión (auth), sin filtro de rol: no existe un rol
+// de cuidador de alimentación en core.roles. Cuando exista, añadir 'rol:<rol>'.
+$routes->group('alimentacion', ['filter' => ['auth', 'csrf']], static function ($routes) {
     $routes->get('/', 'Alimentacion\Inicio::index');
 
     // Dietas por animal
     $routes->get('dietas', 'Alimentacion\Dietas::index');
     $routes->post('dietas/guardar', 'Alimentacion\Dietas::guardar');
-    $routes->get('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
+    // Eliminar por POST: antes era GET y se borraba con solo abrir el enlace.
+    $routes->post('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
 
     // Horarios de alimentación
     $routes->get('horarios', 'Alimentacion\Horarios::index');
     $routes->post('horarios/guardar', 'Alimentacion\Horarios::guardar');
-    $routes->get('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
+    $routes->post('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
 
     // Registros de alimentación
     $routes->get('registros', 'Alimentacion\Registros::index');
     $routes->post('registros/guardar', 'Alimentacion\Registros::guardar');
-    $routes->get('registros/eliminar/(:num)', 'Alimentacion\Registros::eliminar/$1');
+    $routes->post('registros/eliminar/(:num)', 'Alimentacion\Registros::eliminar/$1');
 
     // Inventario de alimentos
     $routes->get('inventario', 'Alimentacion\Inventario::index');
     $routes->post('inventario/guardar', 'Alimentacion\Inventario::guardar');
-    $routes->get('inventario/eliminar/(:num)', 'Alimentacion\Inventario::eliminar/$1');
+    $routes->post('inventario/eliminar/(:num)', 'Alimentacion\Inventario::eliminar/$1');
 
     // Reportes de alimentación
     $routes->get('reportes', 'Alimentacion\Reportes::index');

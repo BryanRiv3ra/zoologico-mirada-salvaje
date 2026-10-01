@@ -170,6 +170,10 @@ class ServicioVentas
             throw new VentaException('La promoción seleccionada no existe.');
         }
 
+        if (! es_activo($promo['activo'] ?? false)) {
+            throw new VentaException('La promoción seleccionada no está activa.');
+        }
+
         $hoy = date('Y-m-d');
         if ($promo['fecha_inicio'] > $hoy || $promo['fecha_fin'] < $hoy) {
             throw new VentaException('La promoción seleccionada está fuera de su fecha de vigencia.');

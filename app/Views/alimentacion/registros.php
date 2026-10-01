@@ -31,6 +31,7 @@
     <h2>Registrar alimentación realizada</h2>
 
     <form action="<?= base_url('alimentacion/registros/guardar') ?>" method="post" class="modern-form">
+        <?= csrf_field() ?>
         <div class="form-table-layout">
             <div class="form-group">
                 <label for="horario_id">Horario de alimentación</label>
@@ -120,13 +121,14 @@
                         <td><?= esc(date('d/m/Y H:i', strtotime($registro['fecha']))) ?></td>
                         <td><?= esc($registro['observaciones'] ?? 'Sin observaciones') ?></td>
                         <td>
-                            <a 
-                                href="<?= base_url('alimentacion/registros/eliminar/' . $registro['id']) ?>" 
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Eliminar este registro?')"
+                            <form method="post" action="<?= base_url('alimentacion/registros/eliminar/' . $registro['id']) ?>" style="display:inline;"
+                                  onsubmit="return confirm('¿Eliminar este registro?')"
                             >
-                                Eliminar
-                            </a>
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

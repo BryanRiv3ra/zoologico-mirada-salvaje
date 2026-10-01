@@ -135,29 +135,73 @@ class Portal extends BaseController
             return redirect()->to('/portal/comprar')->with('error', $ex->getMessage());
         }
 
-        session()->set('ultima_venta', $venta['venta_id']);
+        // Guarda los ids de las entradas compradas (puede haber varias) para
+        // poder mostrarle el comprobante solo a quien acaba de comprar.
+        session()->set('ultima_venta', $venta['entrada_ids']);
 
-        return redirect()->to('/portal/ticket/' . $venta['venta_id'])->with('success', 'Pago aprobado. Tu comprobante está listo.');
+        return redirect()->to('/portal/ticket/' . $venta['primer_id'])->with('success', 'Pago aprobado. Tu comprobante está listo.');
     }
 
     public function ticket(int $id): string
     {
-        $venta = model(VentaModel::class)->conDetalle($id);
-        if ($venta === null || $venta['tipo_venta'] !== 'portal') {
+        // Seguridad: solo se muestra el comprobante de una compra hecha en este
+        // navegador. session('ultima_venta') guarda los ids de esas entradas.
+        $idsPermitidos = array_map('intval', (array) session('ultima_venta'));
+        if (! in_array($id, $idsPermitidos, true)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        if ($venta['estado'] !== 'completada') {
+        // Se arman todos los boletos de la compra (una compra puede tener varios).
+        $ventaModel = model(VentaModel::class);
+        $ventas     = [];
+        foreach ($idsPermitidos as $entradaId) {
+            $detalle = $ventaModel->conDetalle($entradaId);
+            if ($detalle !== null) {
+                $ventas[] = $detalle;
+            }
+        }
+
+        $principal = null;
+        foreach ($ventas as $venta) {
+            if ((int) $venta['id'] === $id) {
+                $principal = $venta;
+                break;
+            }
+        }
+
+        // La entrada pedida debe existir; si no, 404.
+        if ($principal === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($principal['estado'] !== 'completada') {
             return redirect()->to('/portal')->with('error', 'Este comprobante fue anulado.');
+        }
+
+        // Boletos y totales de toda la compra.
+        $boletos   = [];
+        $subtotal  = 0.0;
+        $descuento = 0.0;
+        $total     = 0.0;
+        foreach ($ventas as $venta) {
+            $subtotal  += (float) $venta['subtotal'];
+            $descuento += (float) $venta['descuento'];
+            $total     += (float) $venta['total'];
+            foreach ($venta['boletos'] as $boleto) {
+                $boletos[] = $boleto;
+            }
         }
 
         $qr = new GeneradorQr();
 
         return view('portal/ticket', [
-            'titulo'   => 'Comprobante ' . $venta['codigo'],
-            'venta'    => $venta,
-            'qr'       => $qr,
-            'cssExtra' => 'entradas.css',
+            'titulo'    => 'Comprobante ' . $principal['codigo'],
+            'venta'     => $principal,
+            'boletos'   => $boletos,
+            'subtotal'  => $subtotal,
+            'descuento' => $descuento,
+            'total'     => $total,
+            'qr'        => $qr,
+            'cssExtra'  => 'entradas.css',
         ]);
     }
 
