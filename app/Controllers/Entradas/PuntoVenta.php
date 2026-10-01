@@ -167,18 +167,12 @@ class PuntoVenta extends BaseController
 
     private function promosPorTarifa(): array
     {
-        $promos = model(PromocionModel::class)->findAll();
-        $mapa   = [];
+        $mapa    = [];
+        $tarifas = model(TarifaModel::class)->activas();
 
-        // No existe tabla promocion_tarifa en el E-R actual: toda promoción
-        // vigente se ofrece para todas las tarifas.
-        $hoy = date('Y-m-d');
-        foreach ($promos as $promo) {
-            if ($promo['fecha_inicio'] > $hoy || $promo['fecha_fin'] < $hoy) {
-                continue;
-            }
-            foreach (model(TarifaModel::class)->activas() as $tarifa) {
-                $mapa[(int) $tarifa['id']][] = $promo;
+        foreach (model(PromocionModel::class)->activas() as $promo) {
+            foreach ($tarifas as $tarifa) {
+             $mapa[(int) $tarifa['id']][] = $promo;
             }
         }
 
