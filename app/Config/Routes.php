@@ -56,13 +56,14 @@ $routes->group('clinico', ['filter' => ['auth', 'csrf']], static function ($rout
     $routes->post('guardar', 'Clinico::guardar');
     $routes->get('editar/(:num)', 'Clinico::editar/$1');
     $routes->post('actualizar/(:num)', 'Clinico::actualizar/$1');
-    $routes->get('eliminar/(:num)', 'Clinico::eliminar/$1');
+    // Eliminar por POST: antes era GET y se borraba con solo abrir el enlace.
+    $routes->post('eliminar/(:num)', 'Clinico::eliminar/$1');
 
     // Vacunas
     $routes->get('vacunas', 'ClinicoVacunas::index');
     $routes->post('vacunas/guardar', 'ClinicoVacunas::guardar');
     $routes->post('vacunas/guardar-vacuna', 'ClinicoVacunas::guardarVacuna');
-    $routes->get('vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
+    $routes->post('vacunas/eliminar/(:num)', 'ClinicoVacunas::eliminar/$1');
 });
 // ===== FIN CONTROL CLINICO =====
 
@@ -132,22 +133,23 @@ $routes->group('alimentacion', ['filter' => ['auth', 'csrf']], static function (
     // Dietas por animal
     $routes->get('dietas', 'Alimentacion\Dietas::index');
     $routes->post('dietas/guardar', 'Alimentacion\Dietas::guardar');
-    $routes->get('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
+    // Eliminar por POST: antes era GET y se borraba con solo abrir el enlace.
+    $routes->post('dietas/eliminar/(:num)', 'Alimentacion\Dietas::eliminar/$1');
 
     // Horarios de alimentación
     $routes->get('horarios', 'Alimentacion\Horarios::index');
     $routes->post('horarios/guardar', 'Alimentacion\Horarios::guardar');
-    $routes->get('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
+    $routes->post('horarios/eliminar/(:num)', 'Alimentacion\Horarios::eliminar/$1');
 
     // Registros de alimentación
     $routes->get('registros', 'Alimentacion\Registros::index');
     $routes->post('registros/guardar', 'Alimentacion\Registros::guardar');
-    $routes->get('registros/eliminar/(:num)', 'Alimentacion\Registros::eliminar/$1');
+    $routes->post('registros/eliminar/(:num)', 'Alimentacion\Registros::eliminar/$1');
 
     // Inventario de alimentos
     $routes->get('inventario', 'Alimentacion\Inventario::index');
     $routes->post('inventario/guardar', 'Alimentacion\Inventario::guardar');
-    $routes->get('inventario/eliminar/(:num)', 'Alimentacion\Inventario::eliminar/$1');
+    $routes->post('inventario/eliminar/(:num)', 'Alimentacion\Inventario::eliminar/$1');
 
     // Reportes de alimentación
     $routes->get('reportes', 'Alimentacion\Reportes::index');

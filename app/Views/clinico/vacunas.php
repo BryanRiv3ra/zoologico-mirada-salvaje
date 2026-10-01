@@ -142,9 +142,11 @@
                 <td><span class="status-chip is-pendiente"><?= esc($v['fecha']) ?></span></td>
                 <td><?= esc($v['dosis']) ?></td>
                 <td>
-                  <a href="<?= base_url('clinico/vacunas/eliminar/' . $v['id']) ?>"
-                     onclick="return confirm('¿Eliminar esta vacuna programada?');"
-                     style="color:#ef4444;">Eliminar</a>
+                  <form method="post" action="<?= base_url('clinico/vacunas/eliminar/' . $v['id']) ?>" style="display:inline;"
+                        onsubmit="return confirm('¿Eliminar esta vacuna programada?');">
+                    <?= csrf_field() ?>
+                    <button type="submit" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;color:#ef4444;">Eliminar</button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -186,9 +188,11 @@
                 <td><span class="status-chip is-completado"><?= esc($v['fecha']) ?></span></td>
                 <td><?= esc($v['dosis']) ?></td>
                 <td>
-                  <a href="<?= base_url('clinico/vacunas/eliminar/' . $v['id']) ?>"
-                     onclick="return confirm('¿Eliminar este registro de vacuna aplicada?');"
-                     style="color:#ef4444;">Eliminar</a>
+                  <form method="post" action="<?= base_url('clinico/vacunas/eliminar/' . $v['id']) ?>" style="display:inline;"
+                        onsubmit="return confirm('¿Eliminar este registro de vacuna aplicada?');">
+                    <?= csrf_field() ?>
+                    <button type="submit" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;color:#ef4444;">Eliminar</button>
+                  </form>
                 </td>
               </tr>
             <?php endforeach; ?>

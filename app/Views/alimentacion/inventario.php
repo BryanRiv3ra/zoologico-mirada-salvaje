@@ -168,13 +168,14 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a 
-                                href="<?= base_url('alimentacion/inventario/eliminar/' . $alimento['id']) ?>" 
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Eliminar este alimento?')"
+                            <form method="post" action="<?= base_url('alimentacion/inventario/eliminar/' . $alimento['id']) ?>" style="display:inline;"
+                                  onsubmit="return confirm('¿Eliminar este alimento?')"
                             >
-                                Eliminar
-                            </a>
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Eliminar
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
